@@ -33,7 +33,6 @@ const WeatherForecast: React.FC = () => {
   );
 
   const getForecast = async (lat: number, long: number) => {
-    console.log("trying to fetch forecast");
     try {
       const response = await fetch(
         `${baseURL}/forecast?lat=${lat}&lon=${long}`
@@ -50,13 +49,38 @@ const WeatherForecast: React.FC = () => {
 
   useEffect(() => {
     const fetchWeatherAndForecast = async () => {
-      const forecastData = await getForecast(61.4917167, 23.7833776);
-      console.log("forecastData", forecastData);
-      setForecast(forecastData || []);
+      try {
+        const [latitude, longitude] = await getCoordinates();
+        const forecastData = await getForecast(latitude, longitude);
+        setForecast(forecastData || []);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     };
 
     fetchWeatherAndForecast();
   }, []);
+
+  const getCoordinates = () =>
+    new Promise<[number, number]>((resolve, reject) => {
+      const efiCodeHeadQarters = { lat: 60.1694696, long: 24.9235992 };
+
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            const { latitude, longitude } = position.coords;
+            resolve([latitude, longitude]);
+          },
+          error => {
+            console.error("Error getting geolocation:", error);
+            resolve([efiCodeHeadQarters.lat, efiCodeHeadQarters.long]);
+          }
+        );
+      } else {
+        console.error("Geolocation is not available in this browser.");
+        resolve([efiCodeHeadQarters.lat, efiCodeHeadQarters.long]);
+      }
+    });
 
   return (
     <div className={styles.forecastContainer}>
@@ -79,7 +103,6 @@ const WeatherForecast: React.FC = () => {
           </div>
         ))}
       </div>
-
       <div className={styles.forecastTable}>
         {dateForecast.map(entry => {
           const hour = entry.dt_txt.split(" ")[1].slice(0, 5);
