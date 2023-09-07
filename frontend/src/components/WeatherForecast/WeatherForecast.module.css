@@ -1,0 +1,58 @@
+.forecastContainer {
+  display: flex;
+  flex-direction: column;
+  width: 50vw;
+  border: 1px solid #555;
+  border-radius: 4px;
+  /* gap: 20px; */
+}
+
+.date {
+  color: white;
+  background-color: #888;
+  padding: 12px;
+}
+
+.dateTabs {
+  display: flex;
+  padding: 12px 40px;
+  background-color: #888;
+  color: white;
+  justify-content: space-between;
+}
+
+.dateButton {
+  cursor: pointer;
+  font-weight: 400;
+}
+
+.selectedDate {
+  font-weight: bold;
+}
+
+.forecastTable {
+  display: flex;
+  text-align: center;
+  gap: 20px;
+  padding: 12px;
+  overflow-x: scroll;
+  justify-content: start;
+}
+
+.forecastEntry {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 150px;
+  border-right: 1px solid #ccc;
+}
+
+.forecastEntry:last-child {
+  border-right: none;
+}
+
+img {
+  height: 35px;
+  width: 35px;
+  align-self: center;
+}
