@@ -3,25 +3,23 @@ const Koa = require("koa");
 const router = require("koa-router")();
 const fetch = require("node-fetch");
 const cors = require("kcors");
-const bodyParser = require("koa-body");
 
 const appId = process.env.APPID || "970c99e80503ab50d3da38fae6f1be3b";
 const mapURI =
   process.env.MAP_ENDPOINT || "http://api.openweathermap.org/data/2.5";
-const targetCity = process.env.TARGET_CITY || "Helsinki,fi";
 
 const port = process.env.PORT || 9000;
 
 const app = new Koa();
 
 app.use(cors());
-// app.use(bodyParser());
 
-const fetchWeather = async () => {
-  const endpoint = `${mapURI}/weather?q=${targetCity}&appid=${appId}`;
-  const response = await fetch(endpoint);
+const isValidLatitude = (lat) => {
+  return lat && !isNaN(lat) && lat >= -90 && lat <= 90;
+};
 
-  return response ? response.json() : {};
+const isValidLongitude = (lon) => {
+  return lon && !isNaN(lon) && lon >= -180 && lon <= 180;
 };
 
 const fetchForecast = async (lat, lon) => {
@@ -30,16 +28,9 @@ const fetchForecast = async (lat, lon) => {
   return response ? response.json() : {};
 };
 
-router.get("/api/weather", async (ctx) => {
-  const weatherData = await fetchWeather();
-
-  ctx.type = "application/json; charset=utf-8";
-  ctx.body = weatherData.weather ? weatherData.weather[0] : {};
-});
-
 router.get("/api/forecast", async (ctx) => {
   const { lat, lon } = ctx.query;
-  if (!lat || !lon) {
+  if (!isValidLatitude(lat) || !isValidLongitude(lon)) {
     ctx.throw(400, "Latitude and Longitude are required.");
   }
 
@@ -55,3 +46,4 @@ app.use(router.allowedMethods());
 app.listen(port);
 
 console.log(`App listening on port ${port}`);
+module.exports = app;
