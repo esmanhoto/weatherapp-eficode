@@ -116,7 +116,7 @@ const WeatherForecast: React.FC = () => {
               className={styles.forecastEntry}
               data-test-id="forecastEntry">
               <div className="">{hour}</div>
-              <div className="">
+              <div data-test-id="temperatureEntry">
                 {temp}
                 °C
               </div>
