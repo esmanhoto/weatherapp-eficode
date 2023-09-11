@@ -62,7 +62,7 @@ const WeatherForecast: React.FC = () => {
   }, []);
 
   const getCoordinates = () =>
-    new Promise<[number, number]>((resolve, reject) => {
+    new Promise<[number, number]>(resolve => {
       const efiCodeHeadQarters = { lat: 60.1694696, long: 24.9235992 };
 
       if ("geolocation" in navigator) {
@@ -83,8 +83,8 @@ const WeatherForecast: React.FC = () => {
     });
 
   return (
-    <div className={styles.forecastContainer}>
-      <div className={styles.dateTabs}>
+    <div className={styles.forecastContainer} data-test-id="forecastContainer">
+      <div className={styles.dateTabs} data-test-id="dateTabs">
         {uniqueDates.map(date => (
           <div
             key={date}
@@ -94,7 +94,8 @@ const WeatherForecast: React.FC = () => {
             tabIndex={0}
             className={`${styles.dateButton} ${
               date === selectedDate ? styles.selectedDate : ""
-            }`}>
+            }`}
+            data-test-id="dateButton">
             {date === currentDate
               ? "Today"
               : new Date(date).toLocaleDateString("default", {
@@ -103,14 +104,17 @@ const WeatherForecast: React.FC = () => {
           </div>
         ))}
       </div>
-      <div className={styles.forecastTable}>
+      <div className={styles.forecastTable} data-test-id="forecastTable">
         {dateForecast.map(entry => {
           const hour = entry.dt_txt.split(" ")[1].slice(0, 5);
           const { temp, temp_min, temp_max } = entry.main;
           const weatherIcon = entry.weather[0]?.icon.slice(0, -1);
 
           return (
-            <div key={entry.dt} className={styles.forecastEntry}>
+            <div
+              key={entry.dt}
+              className={styles.forecastEntry}
+              data-test-id="forecastEntry">
               <div className="">{hour}</div>
               <div className="">
                 {temp}

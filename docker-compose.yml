@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    environment:
+      APPID: "970c99e80503ab50d3da38fae6f1be3b"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        ENDPOINT: "http://backend:9000/api/weather"
+    ports:
+      - "8000:8000"
+    environment:
+      ENDPOINT: "http://localhost:9000/api"

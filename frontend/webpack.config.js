@@ -7,7 +7,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const GLOBALS = {
   "process.env.ENDPOINT": JSON.stringify(
     process.env.ENDPOINT || "http://0.0.0.0:9000/api"
-  ),
+  )
 };
 
 module.exports = {
@@ -15,22 +15,22 @@ module.exports = {
   cache: true,
   devtool: "cheap-module-eval-source-map",
   entry: {
-    main: ["@babel/polyfill", path.join(__dirname, "src/App.tsx")],
+    main: ["@babel/polyfill", path.join(__dirname, "src/App.tsx")]
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".jsx"],
-    modules: ["src", "node_modules"],
+    modules: ["src", "node_modules"]
   },
   devServer: {
     contentBase: "src/public",
     historyApiFallback: true,
     disableHostCheck: true,
     host: process.env.HOST || "0.0.0.0",
-    port: process.env.PORT || 8000,
+    port: process.env.PORT || 8000
   },
   output: {
     filename: "[name].[hash:8].js",
-    publicPath: "/",
+    publicPath: "/"
   },
   module: {
     rules: [
@@ -48,15 +48,15 @@ module.exports = {
                   "@babel/env",
                   {
                     targets: { browsers: ["last 2 versions"] },
-                    modules: false,
-                  },
-                ],
+                    modules: false
+                  }
+                ]
               ],
-              plugins: ["@babel/plugin-proposal-class-properties"],
-            },
+              plugins: ["@babel/plugin-proposal-class-properties"]
+            }
           },
-          { loader: "ts-loader" },
-        ],
+          { loader: "ts-loader" }
+        ]
       },
       {
         test: /\.module\.css$/,
@@ -66,28 +66,28 @@ module.exports = {
             loader: "css-loader",
             options: {
               modules: {
-                localIdentName: "[name]__[local]___[hash:base64:5]",
+                localIdentName: "[name]__[local]___[hash:base64:5]"
               },
-              importLoaders: 1,
-            },
-          },
-        ],
+              importLoaders: 1
+            }
+          }
+        ]
       },
       {
         test: /\.css$/,
         exclude: /\.module\.css$/,
-        use: ["style-loader", "css-loader"],
-      },
-    ],
+        use: ["style-loader", "css-loader"]
+      }
+    ]
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: "src/public/index.html",
-      filename: "index.html",
+      filename: "index.html"
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
     new TransferWebpackPlugin([{ from: "src/public" }], "."),
-    new webpack.DefinePlugin(GLOBALS),
-  ],
+    new webpack.DefinePlugin(GLOBALS)
+  ]
 };
