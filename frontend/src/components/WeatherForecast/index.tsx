@@ -17,7 +17,9 @@ interface ForecastEntry {
   }[];
 }
 
-const baseURL = process.env.ENDPOINT;
+// const baseURL = process.env.ENDPOINT;
+const baseURL =
+  "https://ek8kpstazl.execute-api.eu-north-1.amazonaws.com/Prod/api";
 console.log("Base URL:", baseURL);
 
 const WeatherForecast: React.FC = () => {

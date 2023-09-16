@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'backend-aws
+
+  SAM Template for weather forecast endpoint
+
+  '
+Globals:
+  Function:
+    Timeout: 5
+    MemorySize: 128
+Resources:
+  WeatherForecastFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://weather-forecast-s3/00d14b373e31da8c4940396913972ea3
+      Handler: index.handler
+      Runtime: nodejs14.x
+      Architectures:
+      - x86_64
+      Events:
+        WeatherForecast:
+          Type: Api
+          Properties:
+            Path: /api/forecast
+            Method: get
+    Metadata:
+      SamResourceId: WeatherForecastFunction
+Outputs:
+  WeatherForecastApi:
+    Description: API Gateway endpoint URL for Prod stage for Weather Forecast function
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/api/forecast
+  WeatherForecastFunction:
+    Description: Weather Forecast Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - WeatherForecastFunction
+      - Arn
+  WeatherForecastFunctionIamRole:
+    Description: Implicit IAM Role created for Weather Forecast function
+    Value:
+      Fn::GetAtt:
+      - WeatherForecastFunctionRole
+      - Arn

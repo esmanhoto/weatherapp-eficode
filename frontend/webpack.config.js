@@ -1,7 +1,7 @@
 const webpack = require("webpack");
 const path = require("path");
 
-const TransferWebpackPlugin = require("transfer-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const GLOBALS = {
@@ -13,7 +13,7 @@ const GLOBALS = {
 module.exports = {
   mode: "development",
   cache: true,
-  devtool: "cheap-module-eval-source-map",
+  devtool: "eval-source-map",
   entry: {
     main: ["@babel/polyfill", path.join(__dirname, "src/App.tsx")]
   },
@@ -22,13 +22,13 @@ module.exports = {
     modules: ["src", "node_modules"]
   },
   devServer: {
-    contentBase: "src/public",
+    static: "src/public",
     historyApiFallback: true,
-    disableHostCheck: true,
     host: process.env.HOST || "0.0.0.0",
     port: process.env.PORT || 8000
   },
   output: {
+    path: path.resolve(__dirname, "build"),
     filename: "[name].[hash:8].js",
     publicPath: "/"
   },
@@ -87,7 +87,20 @@ module.exports = {
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
-    new TransferWebpackPlugin([{ from: "src/public" }], "."),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: "src/public",
+          to: "."
+        }
+      ]
+    }),
     new webpack.DefinePlugin(GLOBALS)
-  ]
+  ],
+  optimization: {
+    minimize: true,
+    splitChunks: {
+      chunks: "all"
+    }
+  }
 };
