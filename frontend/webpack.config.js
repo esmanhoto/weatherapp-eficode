@@ -1,9 +1,11 @@
 const webpack = require("webpack");
 const path = require("path");
+const dotenv = require("dotenv");
 
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
+dotenv.config();
 const GLOBALS = {
   "process.env.ENDPOINT": JSON.stringify(
     process.env.ENDPOINT || "http://0.0.0.0:9000/api"
@@ -77,6 +79,17 @@ module.exports = {
         test: /\.css$/,
         exclude: /\.module\.css$/,
         use: ["style-loader", "css-loader"]
+      },
+      {
+        test: /\.(jpe?g|png|gif|svg)$/i,
+        use: [
+          {
+            loader: "file-loader",
+            options: {
+              name: "static/media/[name].[hash:8].[ext]"
+            }
+          }
+        ]
       }
     ]
   },

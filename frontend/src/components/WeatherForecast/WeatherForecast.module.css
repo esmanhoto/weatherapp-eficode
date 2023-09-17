@@ -3,8 +3,23 @@
   flex-direction: column;
   width: 50vw;
   border: 1px solid #555;
-  border-radius: 4px;
-  /* gap: 20px; */
+  border-radius: 8px;
+  background-color: #fff;
+  z-index: 2;
+}
+
+.header {
+  padding: 10px;
+  text-align: center;
+  text-transform: uppercase;
+  color: white;
+  font-weight: 700;
+  background-image: linear-gradient(
+    to right,
+    rgba(6, 6, 166, 0.6),
+    rgba(11, 11, 52, 0.843)
+  );
+  border-radius: 6px 6px 0 0;
 }
 
 .date {
@@ -15,19 +30,44 @@
 
 .dateTabs {
   display: flex;
-  padding: 12px 40px;
   background-color: #888;
   color: white;
-  justify-content: space-between;
+  justify-content: start;
+  overflow: scroll;
 }
 
 .dateButton {
   cursor: pointer;
   font-weight: 400;
+  padding: 8px 20px;
+  transition: background-color 0.2s ease;
 }
 
 .selectedDate {
   font-weight: bold;
+  background-color: #555;
+}
+
+.fadeIn {
+  height: 100%;
+  width: 20px;
+  background-image: linear-gradient(to right, #888, #555);
+}
+
+.fadeOut {
+  height: 100%;
+  width: 20px;
+  background-image: linear-gradient(to left, #888, #555);
+}
+
+.noFade {
+  width: 20px;
+}
+
+.dateWrapper {
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
 }
 
 .forecastTable {
@@ -39,20 +79,57 @@
   justify-content: start;
 }
 
+.centeredItems .forecastTable {
+  justify-content: center;
+}
+
+.startAlignedItems .forecastTable {
+  justify-content: start;
+}
+
 .forecastEntry {
   display: flex;
   flex-direction: column;
   gap: 8px;
   min-width: 150px;
   border-right: 1px solid #ccc;
+  padding: 10px;
 }
 
 .forecastEntry:last-child {
   border-right: none;
 }
 
+.forecastLine {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.forecastLine:last-child {
+  flex-direction: column;
+}
+
+.forecastKey {
+  font-size: 12px;
+  font-weight: 700;
+}
+
 img {
   height: 35px;
   width: 35px;
   align-self: center;
+}
+
+/* Hiding scrollbars */
+::-webkit-scrollbar {
+  display: none;
+}
+
+.forecastContainer,
+.dateTabs,
+.forecastTable {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }

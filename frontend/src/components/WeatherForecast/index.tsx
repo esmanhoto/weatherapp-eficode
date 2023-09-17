@@ -17,30 +17,36 @@ interface ForecastEntry {
   }[];
 }
 
-// const baseURL = process.env.ENDPOINT;
-const baseURL =
-  "https://ek8kpstazl.execute-api.eu-north-1.amazonaws.com/Prod/api";
-console.log("Base URL:", baseURL);
+// Base URL for the API. Using environment variable for security and flexibility.
+const baseURL = process.env.ENDPOINT;
 
 const WeatherForecast: React.FC = () => {
+  // State to hold forecast data.
   const [forecast, setForecast] = useState<ForecastEntry[]>([]);
+
+  // Extract current date to use as initial selected date.
   const currentDate = new Date().toISOString().split("T")[0];
   const [selectedDate, setSelectedDate] = useState(currentDate);
 
+  // Extract unique dates from the forecast data for tab headings.
   const uniqueDates = Array.from(
     new Set(forecast.map(entry => entry.dt_txt.split(" ")[0]))
   ).slice(0, 5);
+
+  // Filter forecast entries based on the selected date.
   const dateForecast = forecast.filter(entry =>
     entry.dt_txt.includes(selectedDate)
   );
+  const alignmentClass =
+    dateForecast.length < 5 ? styles.centeredItems : styles.startAlignedItems;
 
+  // Fetch forecast data based on latitude and longitude.
   const getForecast = async (lat: number, long: number) => {
     try {
       const response = await fetch(
         `${baseURL}/forecast?lat=${lat}&lon=${long}`
       );
       const data = await response.json();
-      console.log("Fetched data:", data);
 
       return data;
     } catch (error) {
@@ -52,7 +58,7 @@ const WeatherForecast: React.FC = () => {
   useEffect(() => {
     const fetchWeatherAndForecast = async () => {
       try {
-        const [latitude, longitude] = await getCoordinates();
+        const [latitude, longitude] = await getUserCoordinates();
         const forecastData = await getForecast(latitude, longitude);
         setForecast(forecastData || []);
       } catch (error) {
@@ -63,7 +69,8 @@ const WeatherForecast: React.FC = () => {
     fetchWeatherAndForecast();
   }, []);
 
-  const getCoordinates = () =>
+  // Utility function to get user's coordinates or fallback to default.
+  const getUserCoordinates = () =>
     new Promise<[number, number]>(resolve => {
       const efiCodeHeadQarters = { lat: 60.1694696, long: 24.9235992 };
 
@@ -85,24 +92,35 @@ const WeatherForecast: React.FC = () => {
     });
 
   return (
-    <div className={styles.forecastContainer} data-test-id="forecastContainer">
+    <div
+      className={`${styles.forecastContainer} ${alignmentClass}`}
+      data-test-id="forecastContainer">
+      <div className={styles.header}>Eficode&apos;s Weather Forecast</div>
       <div className={styles.dateTabs} data-test-id="dateTabs">
         {uniqueDates.map(date => (
-          <div
-            key={date}
-            onClick={() => setSelectedDate(date)}
-            onKeyPress={() => setSelectedDate(date)}
-            role="button"
-            tabIndex={0}
-            className={`${styles.dateButton} ${
-              date === selectedDate ? styles.selectedDate : ""
-            }`}
-            data-test-id="dateButton">
-            {date === currentDate
-              ? "Today"
-              : new Date(date).toLocaleDateString("default", {
-                  weekday: "long"
-                })}
+          <div className={styles.dateWrapper}>
+            <div
+              className={date === selectedDate ? styles.fadeIn : styles.noFade}
+            />
+            <div
+              key={date}
+              onClick={() => setSelectedDate(date)}
+              onKeyPress={() => setSelectedDate(date)}
+              role="button"
+              tabIndex={0}
+              className={`${styles.dateButton} ${
+                date === selectedDate ? styles.selectedDate : ""
+              }`}
+              data-test-id="dateButton">
+              {date === currentDate
+                ? "Today"
+                : new Date(date).toLocaleDateString("default", {
+                    weekday: "long"
+                  })}
+            </div>
+            <div
+              className={date === selectedDate ? styles.fadeOut : styles.noFade}
+            />
           </div>
         ))}
       </div>
@@ -117,16 +135,20 @@ const WeatherForecast: React.FC = () => {
               key={entry.dt}
               className={styles.forecastEntry}
               data-test-id="forecastEntry">
-              <div className="">{hour}</div>
-              <div data-test-id="temperatureEntry">
-                {temp}
-                °C
+              <div className={styles.forecastLine}>
+                <div className={styles.forecastKey}>Time: </div>
+                <div>{hour}</div>
+              </div>
+              <div className={styles.forecastLine}>
+                <div className={styles.forecastKey}>Temp: </div>
+                <div data-test-id="temperatureEntry">{temp}°C</div>
               </div>
               <img src={`../../img/${weatherIcon}.svg`} alt="weather-icon" />
-              <div className="">
-                {temp_min}
-                °C -{temp_max}
-                °C
+              <div className={styles.forecastLine}>
+                <div className={styles.forecastKey}>Min - Max:</div>
+                <div>
+                  {temp_min}°C - {temp_max}°C
+                </div>
               </div>
             </div>
           );

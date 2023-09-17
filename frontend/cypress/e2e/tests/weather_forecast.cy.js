@@ -7,9 +7,9 @@ describe("Weather Forecast Test", () => {
 
   it("Checks initial items", () => {
     cy.get("[data-test-id='forecastContainer']").should("be.visible");
+    cy.wait(5000);
     cy.get('[data-test-id="dateTabs"]').should("be.visible");
     cy.get('[data-test-id="forecastTable"]').should("be.visible");
-    cy.wait(5000);
     cy.get('[data-test-id="forecastEntry"]').should("have.length.gt", 0);
   });
 
@@ -42,7 +42,7 @@ describe("Weather Forecast Test", () => {
       expect($table[0].scrollWidth).to.be.gt($table[0].clientWidth);
     });
     cy.get('[data-test-id="forecastTable"]').then($table => {
-      $table.scrollLeft(100);
+      $table.scrollLeft(1500);
     });
     cy.get('[data-test-id="forecastEntry"]').last().should("be.visible");
   });
@@ -61,6 +61,10 @@ describe("Weather Forecast Test with Mock Data", function () {
   });
 
   it("Checks if the forecast is displayed with mocked data", function () {
+    // changing the current date to match with the stub data
+    const now = new Date("2023-09-11").getTime();
+    cy.clock(now);
+
     cy.visit("http://localhost:8000");
 
     cy.wait("@getForecast").then(interception => {
@@ -79,7 +83,7 @@ describe("Weather Forecast Test with Mock Data", function () {
     });
 
     cy.get('[data-test-id="forecastTable"]').then($table => {
-      $table.scrollLeft(100);
+      $table.scrollLeft(1500);
     });
     cy.get('[data-test-id="forecastEntry"]')
       .last()

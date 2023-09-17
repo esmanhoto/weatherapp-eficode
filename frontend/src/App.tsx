@@ -1,9 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import WeatherForecast from "./components/WeatherForecast";
+import styles from "./App.module.css";
 
 const App: React.FC = () => (
-  <div>
+  <div className={styles.container}>
     <WeatherForecast />
   </div>
 );

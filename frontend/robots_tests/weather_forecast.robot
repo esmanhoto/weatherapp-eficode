@@ -11,10 +11,11 @@ ${URL}            http://localhost:8000
 *** Test Cases ***
 
 Weather Forecast Component Should Render
-    Wait Until Element Is Visible    css=[data-test-id='forecastContainer']    5s
+    Wait Until Element Is Visible    css=[data-test-id='forecastContainer']    8s
     Element Should Be Visible    css=[data-test-id='forecastContainer']
+    Wait Until Element Is Visible    css=[data-test-id='dateTabs']    8s
     Element Should Be Visible    css=[data-test-id='dateTabs']
-    Wait Until Element Is Visible    css=[data-test-id='dateButton']    5s
+    Wait Until Element Is Visible    css=[data-test-id='dateButton']    8s
     ${dates}=    Get WebElements    css=[data-test-id='dateButton']
     Length Should Be    ${dates}    5    msg=Expected 5 dates, but found only ${dates}.
     Element Should Be Visible    css=[data-test-id='forecastTable']
