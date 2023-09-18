@@ -1,6 +1,6 @@
 const fetch = require("node-fetch");
 
-const appId = process.env.APPID || "970c99e80503ab50d3da38fae6f1be3b";
+const appId = process.env.APPID || "";
 const mapURI =
   process.env.MAP_ENDPOINT || "http://api.openweathermap.org/data/2.5";
 
